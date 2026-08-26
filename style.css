@@ -1,0 +1,297 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: #ffffff;
+    color: #333;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1000px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* Dots Icon Header */
+.dots-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 4px);
+    grid-gap: 3px;
+    margin-bottom: 12px;
+}
+
+.dots-grid div {
+    width: 4px;
+    height: 4px;
+    background-color: #e63946;
+    border-radius: 50%;
+}
+
+.section-tag {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #2b2d42;
+    text-transform: uppercase;
+    margin-bottom: 25px;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    color: #1d3557;
+    margin-bottom: 10px;
+}
+
+.section-title span {
+    color: #d62828;
+}
+
+.section-desc {
+    text-align: center;
+    font-size: 11px;
+    color: #6c757d;
+    max-width: 650px;
+    margin: 0 auto 50px auto;
+    line-height: 1.6;
+}
+
+/* ------------------------------------
+   1. DESIGN THINKING PROCESS STYLES
+------------------------------------ */
+.process-wrapper {
+    position: relative;
+    margin-bottom: 70px;
+}
+
+.process-timeline-line {
+    position: absolute;
+    top: 50%;
+    left: 5%;
+    right: 5%;
+    height: 2px;
+    background-color: #e0e0e0;
+    z-index: 1;
+    transform: translateY(-50%);
+}
+
+.process-grid {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    z-index: 2;
+}
+
+.process-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 18%;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.process-step.active-step {
+    transform: scale(1.05);
+}
+
+.process-bubble-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.bubble-bottom {
+    margin-top: 15px;
+    margin-bottom: 0;
+}
+
+.process-bubble {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    font-size: 32px;
+    position: relative;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.process-bubble::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+}
+
+/* Color Themes & Arrows */
+.step-1 .process-bubble { background-color: #e63946; }
+.step-1 .process-bubble::after { bottom: -8px; border-top: 10px solid #e63946; }
+
+.step-2 .process-bubble { background-color: #0077b6; }
+.step-2 .process-bubble::after { top: -8px; border-bottom: 10px solid #0077b6; }
+
+.step-3 .process-bubble { background-color: #2a9d8f; }
+.step-3 .process-bubble::after { bottom: -8px; border-top: 10px solid #2a9d8f; }
+
+.step-4 .process-bubble { background-color: #bc6c25; }
+.step-4 .process-bubble::after { top: -8px; border-bottom: 10px solid #bc6c25; }
+
+.step-5 .process-bubble { background-color: #b5179e; }
+.step-5 .process-bubble::after { bottom: -8px; border-top: 10px solid #b5179e; }
+
+.step-down { margin-top: 60px; }
+
+.step-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #2b2d42;
+    margin-bottom: 6px;
+}
+
+.step-list {
+    list-style: none;
+    font-size: 10px;
+    color: #6c757d;
+    line-height: 1.5;
+}
+
+/* ------------------------------------
+   2. TIMELINE / GANTT CHART STYLES
+------------------------------------ */
+.timeline-margin { margin-top: 60px; }
+
+.timeline-container {
+    margin-top: 30px;
+    position: relative;
+}
+
+.weeks-header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #eaeaea;
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+}
+
+.week-item {
+    font-size: 10px;
+    color: #495057;
+    font-weight: 600;
+    flex: 1;
+    text-align: center;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.week-item.active {
+    color: #e63946;
+}
+
+.week-item.active::after {
+    content: '';
+    display: block;
+    width: 6px;
+    height: 6px;
+    background-color: #e63946;
+    border-radius: 50%;
+    margin: 4px auto 0 auto;
+}
+
+.gantt-chart {
+    position: relative;
+    min-height: 280px;
+    background: linear-gradient(to right, 
+        transparent 8.33%, #f8f9fa 8.33%, #f8f9fa 8.53%, transparent 8.53%,
+        transparent 16.66%, #f8f9fa 16.66%, #f8f9fa 16.86%, transparent 16.86%,
+        transparent 25%, #f8f9fa 25%, #f8f9fa 25.2%, transparent 25.2%,
+        transparent 33.33%, #f8f9fa 33.33%, #f8f9fa 33.53%, transparent 33.53%,
+        transparent 41.66%, #f8f9fa 41.66%, #f8f9fa 41.86%, transparent 41.86%,
+        transparent 50%, #f8f9fa 50%, #f8f9fa 50.2%, transparent 50.2%,
+        transparent 58.33%, #f8f9fa 58.33%, #f8f9fa 58.53%, transparent 58.53%,
+        transparent 66.66%, #f8f9fa 66.66%, #f8f9fa 66.86%, transparent 66.86%,
+        transparent 75%, #f8f9fa 75%, #f8f9fa 75.2%, transparent 75.2%,
+        transparent 83.33%, #f8f9fa 83.33%, #f8f9fa 83.53%, transparent 83.53%,
+        transparent 91.66%, #f8f9fa 91.66%, #f8f9fa 91.86%, transparent 91.86%
+    );
+}
+
+.task-bar {
+    height: 32px;
+    border-radius: 16px;
+    color: #ffffff;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    position: absolute;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.task-bar:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+}
+
+.task-bar i {
+    margin-right: 6px;
+    font-size: 11px;
+}
+
+.task-1 { top: 10px; left: 2%; width: 24%; background-color: #bc2a4d; }
+.task-2 { top: 60px; left: 10%; width: 28%; background-color: #218380; }
+.task-3 { top: 110px; left: 18%; width: 48%; background-color: #f77f00; }
+.task-4 { top: 160px; left: 58%; width: 25%; background-color: #0077b6; }
+.task-5 { top: 210px; left: 72%; width: 18%; background-color: #1d3557; }
+
+.category-bars {
+    display: flex;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.cat-bar {
+    background-color: #d62828;
+    color: #ffffff;
+    text-align: center;
+    padding: 8px 0;
+    border-radius: 15px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.cat-ux { flex: 2.2; }
+.cat-ui { flex: 1; }
+
+@media (max-width: 768px) {
+    .process-grid { flex-direction: column; align-items: center; }
+    .process-step { width: 100%; margin-bottom: 30px; }
+    .step-down { margin-top: 0; }
+    .process-timeline-line { display: none; }
+    .gantt-chart { overflow-x: auto; }
+}
