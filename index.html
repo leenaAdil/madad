@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مَدَد - MADAD</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        .auth-container {
+            display: flex;
+            width: 900px;
+            min-height: 540px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        /* الجانب التوضيحي */
+        .brand-section {
+            flex: 1;
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #ffffff;
+            text-align: center;
+        }
+
+        .brand-header h2 {
+            color: #700010;
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .brand-header p {
+            color: #444;
+            font-size: 14px;
+            line-height: 1.5;
+            max-width: 280px;
+        }
+
+        .illustration {
+            width: 75%;
+            max-height: 220px;
+            object-fit: contain;
+            margin: 20px 0;
+        }
+
+        .brand-slogan {
+            color: #333;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        /* جانب النماذج */
+        .form-section {
+            flex: 1.1;
+            background-color: #f7f7f7;
+            padding: 35px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-card {
+            border: 2px solid #700010;
+            border-radius: 16px;
+            padding: 25px 20px;
+            background-color: #f7f7f7;
+        }
+
+        .form-title {
+            color: #700010;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            direction: ltr;
+        }
+
+        /* عناصر الإدخال */
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+            direction: ltr;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 4px;
+        }
+
+        .input-group input {
+            width: 100%;
+            border: none;
+            border-bottom: 2px solid #700010;
+            background: transparent;
+            padding: 6px 0;
+            outline: none;
+            font-size: 14px;
+        }
+
+        /* اختيار نوع الحساب */
+        .role-selector {
+            margin-bottom: 18px;
+            text-align: left;
+            direction: ltr;
+        }
+
+        .role-selector label.title {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            color: #222;
+            margin-bottom: 8px;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            font-size: 13px;
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .radio-group input[type="radio"] {
+            accent-color: #700010;
+        }
+
+        /* خيارات تسجيل الدخول */
+        .options-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 12px;
+            direction: ltr;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .remember-me input {
+            accent-color: #700010;
+        }
+
+        .forgot-password {
+            color: #000;
+            text-decoration: none;
+        }
+
+        /* الأزرار والروابط */
+        .btn-submit {
+            background-color: #700010;
+            color: #ffffff;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 25px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 65%;
+            margin: 10px auto 0;
+            display: block;
+            transition: background-color 0.2s;
+        }
+
+        .btn-submit:hover {
+            background-color: #50000b;
+        }
+
+        .switch-mode {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .switch-mode a {
+            color: #700010;
+            font-weight: bold;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-container">
+        
+        <!-- الجانب التوضيحي (يتغير النص ديناميكيًا) -->
+        <div class="brand-section">
+            <div class="brand-header">
+                <h2 id="brandTitle">تسجيل الدخول:</h2>
+                <p id="brandSub">مرحبًا بك مجددًا في منصة مَدَد، سجل دخولك لمتابعة الطلبات والتبرعات.</p>
+            </div>
+            
+            <img src="https://via.placeholder.com/250x200?text=MADAD+Illustration" alt="MADAD" class="illustration">
+            
+            <div class="brand-slogan">مَدَد يصل .... حياة تستمر</div>
+        </div>
+
+        <!-- جانب النماذج -->
+        <div class="form-section">
+            
+            <!-- 1. نموذج تسجيل الدخول (Login) - يظهر أولاً -->
+            <div id="loginCard" class="form-card">
+                <h2 class="form-title">LOGIN</h2>
+                <form id="loginForm">
+                    <div class="input-group">
+                        <label>Email/UserName'</label>
+                        <input type="text" id="loginUser" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Password</label>
+                        <input type="password" id="loginPass" required>
+                    </div>
+
+                    <div class="options-row">
+                        <label class="remember-me">
+                            <input type="checkbox"> Remember me
+                        </label>
+                        <a href="#" class="forgot-password">Forgot Password ?</a>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Login</button>
+                </form>
+                <div class="switch-mode">
+                    ليس لديك حساب؟ <a onclick="toggleAuth('register')">إنشاء حساب جديد</a>
+                </div>
+            </div>
+
+            <!-- 2. نموذج إنشاء حساب (Register) - مخفي افتراضيًا -->
+            <div id="registerCard" class="form-card hidden">
+                <h2 class="form-title">Register</h2>
+                <form id="registerForm">
+                    <div class="role-selector">
+                        <label class="title">Account Type :</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="accountType" value="donor" checked> Donor</label>
+                            <label><input type="radio" name="accountType" value="hospital"> Hospital</label>
+                            <label><input type="radio" name="accountType" value="blood_bank"> Blood Bank</label>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Full Name</label>
+                        <input type="text" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Email</label>
+                        <input type="email" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Phone Number</label>
+                        <input type="tel" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Password</label>
+                        <input type="password" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Confirm Password</label>
+                        <input type="password" required>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Create Account</button>
+                </form>
+                <div class="switch-mode">
+                    لديك حساب بالفعل؟ <a onclick="toggleAuth('login')">تسجيل الدخول</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // التبديل بين واجهتي تسجيل الدخول وإنشاء الحساب
+        function toggleAuth(mode) {
+            const registerCard = document.getElementById('registerCard');
+            const loginCard = document.getElementById('loginCard');
+            const brandTitle = document.getElementById('brandTitle');
+            const brandSub = document.getElementById('brandSub');
+
+            if (mode === 'login') {
+                registerCard.classList.add('hidden');
+                loginCard.classList.remove('hidden');
+                brandTitle.innerText = "تسجيل الدخول:";
+                brandSub.innerText = "مرحبًا بك مجددًا في منصة مَدَد، سجل دخولك لمتابعة الطلبات والتبرعات.";
+            } else if (mode === 'register') {
+                loginCard.classList.add('hidden');
+                registerCard.classList.remove('hidden');
+                brandTitle.innerText = "إنشاء حساب جديد:";
+                brandSub.innerText = "انضم إلى منصة مَدَد وساهم في ربط المتبرعين بنوك الدم والمستشفيات";
+            }
+        }
+
+        // إرسال نموذج تسجيل الدخول
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // منع إعادة تحميل الصفحة
+            const user = document.getElementById('loginUser').value;
+            alert(`تم طلب تسجيل الدخول للمستخدم: ${user}`);
+        });
+
+        // إرسال نموذج إنشاء الحساب
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // منع إعادة تحميل الصفحة
+            alert("تم إرسال بيانات إنشاء الحساب بنجاح!");
+        });
+    </script>
+</body>
+</html>
