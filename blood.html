@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Banks - MADAD</title>
+    <style>
+        :root {
+            --maroon: #700010;
+            --maroon-dark: #50000b;
+            --bg-color: #fcfcfc;
+            --border-color: #700010;
+            --text-dark: #111;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            padding: 30px 40px;
+        }
+
+        /* --- Header Section --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 5px;
+        }
+
+        .header-center {
+            text-align: center;
+            flex: 1;
+        }
+
+        .page-title {
+            font-size: 34px;
+            font-weight: 800;
+            color: var(--maroon);
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #444;
+            font-weight: bold;
+        }
+
+        .btn-add {
+            border: 2px solid var(--maroon);
+            background-color: #ffffff;
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-add:hover {
+            background-color: var(--maroon);
+            color: #ffffff;
+        }
+
+        /* --- Controls & Filters --- */
+        .controls-row {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            margin-top: 15px;
+            margin-bottom: 25px;
+        }
+
+        .filters-column {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 150px;
+        }
+
+        .filter-select {
+            border: 2px solid var(--maroon);
+            background-color: #ffffff;
+            color: #000;
+            padding: 8px 10px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            outline: none;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .search-container {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar {
+            width: 100%;
+            height: 48px;
+            border: 2px solid var(--maroon);
+            border-radius: 25px;
+            padding: 0 50px 0 25px;
+            font-size: 16px;
+            outline: none;
+            background-color: #ffffff;
+        }
+
+        .search-bar::placeholder {
+            color: #666;
+            text-align: center;
+        }
+
+        .search-icon-btn {
+            position: absolute;
+            right: 10px;
+            width: 36px;
+            height: 36px;
+            background-color: #9e8d8f;
+            border: 1.5px solid var(--maroon);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* --- Stats Row --- */
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 35px;
+        }
+
+        .stat-card {
+            flex: 1;
+            max-width: 180px;
+            border: 2px solid var(--maroon);
+            border-radius: 20px;
+            padding: 15px 10px;
+            text-align: center;
+            background-color: #ffffff;
+        }
+
+        .stat-icon {
+            font-size: 22px;
+            margin-bottom: 6px;
+        }
+
+        .stat-title {
+            font-size: 11px;
+            font-weight: bold;
+            color: #000;
+            margin-bottom: 8px;
+        }
+
+        .stat-number {
+            font-size: 18px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        /* --- Data Table --- */
+        .table-container {
+            border: 2px solid var(--maroon);
+            border-radius: 0px;
+            overflow: hidden;
+            background-color: #ffffff;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        .data-table th {
+            background-color: var(--maroon);
+            color: #ffffff;
+            padding: 16px;
+            font-size: 15px;
+            font-weight: bold;
+            border-right: 1px solid #ffffff;
+        }
+
+        .data-table th:last-child {
+            border-right: none;
+        }
+
+        .data-table td {
+            padding: 14px;
+            border-bottom: 1.5px solid var(--maroon);
+            border-right: 1.5px solid var(--maroon);
+            font-size: 14px;
+            font-weight: bold;
+            color: #111;
+        }
+
+        .data-table td:last-child {
+            border-right: none;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            margin: 0 3px;
+            text-decoration: underline;
+            color: #111;
+        }
+
+        .action-btn:hover {
+            color: var(--maroon);
+        }
+
+        /* --- Modal Popup --- */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            width: 450px;
+            border: 2px solid var(--maroon);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--maroon);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .modal-body p {
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        .modal-close {
+            background-color: var(--maroon);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            float: right;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div style="width: 160px;"></div>
+        <div class="header-center">
+            <h1 class="page-title">Blood Bank</h1>
+            <p class="subtitle">Manage and monitor connected blood banks and their blood inventory.</p>
+        </div>
+        <button class="btn-add" onclick="alert('Open Add Blood Bank Form')">+ Add Blood Bank</button>
+    </header>
+
+    <!-- Controls Row -->
+    <div class="controls-row">
+        <div class="filters-column">
+            <select id="locationFilter" class="filter-select" onchange="filterTable()">
+                <option value="">Location ▼</option>
+                <option value="Riyadh">Riyadh</option>
+                <option value="Khartoum">Khartoum</option>
+                <option value="Port Sudan">Port Sudan</option>
+            </select>
+            
+            <select id="bloodTypeFilter" class="filter-select" onchange="filterTable()">
+                <option value="">Blood Type ▼</option>
+                <option value="A+">A+</option>
+                <option value="O+">O+</option>
+                <option value="B+">B+</option>
+                <option value="O-">O-</option>
+                <option value="AB+">AB+</option>
+            </select>
+
+            <select id="statusFilter" class="filter-select" onchange="filterTable()">
+                <option value="">Status ▼</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+            </select>
+        </div>
+
+        <div class="search-container">
+            <input type="text" id="searchInput" class="search-bar" placeholder="Search blood Banks ...." onkeyup="filterTable()">
+            <div class="search-icon-btn">🔍</div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="stats-container">
+        <div class="stat-card">
+            <div class="stat-icon">🏥</div>
+            <div class="stat-title">Total Blood Banks</div>
+            <div class="stat-number">24</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">✔️</div>
+            <div class="stat-title">Active Banks</div>
+            <div class="stat-number">20</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">⚡</div>
+            <div class="stat-title">Inactive Banks</div>
+            <div class="stat-number">4</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🚨</div>
+            <div class="stat-title">Emergency Available</div>
+            <div class="stat-number">8</div>
+        </div>
+    </div>
+
+    <!-- Blood Banks Table -->
+    <div class="table-container">
+        <table class="data-table" id="bloodBanksTable">
+            <thead>
+                <tr>
+                    <th>Blood Bank</th>
+                    <th>Location</th>
+                    <th>Blood Types</th>
+                    <th>Stock Level</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Riyadh Central Blood Bank</td>
+                    <td>Riyadh</td>
+                    <td>A+, O+, B+</td>
+                    <td>High</td>
+                    <td>Active</td>
+                    <td>
+                        <button class="action-btn" onclick="openModal('Riyadh Central Blood Bank', 'Riyadh', 'A+, O+, B+', 'High', 'Active')">👁 View</button>
+                        <button class="action-btn" onclick="alert('Edit Riyadh Central Blood Bank')">✏️ Edit</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>King Fahad Blood Bank</td>
+                    <td>Riyadh</td>
+                    <td>O-, AB+</td>
+                    <td>Medium</td>
+                    <td>Active</td>
+                    <td>
+                        <button class="action-btn" onclick="openModal('King Fahad Blood Bank', 'Riyadh', 'O-, AB+', 'Medium', 'Active')">👁 View</button>
+                        <button class="action-btn" onclick="alert('Edit King Fahad Blood Bank')">✏️ Edit</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Al Noor Blood Bank</td>
+                    <td>Riyadh</td>
+                    <td>A-, B-, O+</td>
+                    <td>Low</td>
+                    <td>Active</td>
+                    <td>
+                        <button class="action-btn" onclick="openModal('Al Noor Blood Bank', 'Riyadh', 'A-, B-, O+', 'Low', 'Active')">👁 View</button>
+                        <button class="action-btn" onclick="alert('Edit Al Noor Blood Bank')">✏️ Edit</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Khartoum Centeral Blood</td>
+                    <td>Khartoum</td>
+                    <td>A+, O+, B+</td>
+                    <td>High</td>
+                    <td>Active</td>
+                    <td>
+                        <button class="action-btn" onclick="openModal('Khartoum Centeral Blood', 'Khartoum', 'A+, O+, B+', 'High', 'Active')">👁 View</button>
+                        <button class="action-btn" onclick="alert('Edit Khartoum Centeral Blood')">✏️ Edit</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Port Sudan Blood Bank</td>
+                    <td>Port Sudan</td>
+                    <td>B+, O-</td>
+                    <td>Medium</td>
+                    <td>Active</td>
+                    <td>
+                        <button class="action-btn" onclick="openModal('Port Sudan Blood Bank', 'Port Sudan', 'B+, O-', 'Medium', 'Active')">👁 View</button>
+                        <button class="action-btn" onclick="alert('Edit Port Sudan Blood Bank')">✏️ Edit</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Details View Modal -->
+    <div class="modal" id="detailsModal">
+        <div class="modal-content">
+            <div class="modal-header" id="modalBankName">Blood Bank Details</div>
+            <div class="modal-body" id="modalDetailsBody">
+                <!-- Data populated dynamically -->
+            </div>
+            <button class="modal-close" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // Interactive Multi-Filter Function
+        function filterTable() {
+            let searchInput = document.getElementById('searchInput').value.toLowerCase();
+            let locationFilter = document.getElementById('locationFilter').value.toLowerCase();
+            let bloodTypeFilter = document.getElementById('bloodTypeFilter').value.toLowerCase();
+            let statusFilter = document.getElementById('statusFilter').value.toLowerCase();
+
+            let table = document.getElementById('bloodBanksTable');
+            let trs = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < trs.length; i++) {
+                let tds = trs[i].getElementsByTagName('td');
+                if (tds.length > 0) {
+                    let bankName = tds[0].textContent.toLowerCase();
+                    let location = tds[1].textContent.toLowerCase();
+                    let bloodTypes = tds[2].textContent.toLowerCase();
+                    let status = tds[4].textContent.toLowerCase();
+
+                    let matchesSearch = bankName.includes(searchInput) || location.includes(searchInput);
+                    let matchesLocation = locationFilter === "" || location.includes(locationFilter);
+                    let matchesBloodType = bloodTypeFilter === "" || bloodTypes.includes(bloodTypeFilter);
+                    let matchesStatus = statusFilter === "" || status === statusFilter;
+
+                    if (matchesSearch && matchesLocation && matchesBloodType && matchesStatus) {
+                        trs[i].style.display = "";
+                    } else {
+                        trs[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        // Details Modal Functions
+        function openModal(name, location, types, stock, status) {
+            document.getElementById('modalBankName').innerText = name;
+            document.getElementById('modalDetailsBody').innerHTML = `
+                <p><strong>Location:</strong> ${location}</p>
+                <p><strong>Available Blood Types:</strong> ${types}</p>
+                <p><strong>Stock Level:</strong> ${stock}</p>
+                <p><strong>Status:</strong> ${status}</p>
+            `;
+            document.getElementById('detailsModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('detailsModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
