@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - منصة مَدَد</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #1a1a1a;
+            padding: 20px 40px;
+        }
+
+        header {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .page-title {
+            color: #700010;
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .menu-icon {
+            font-size: 28px;
+            cursor: pointer;
+            color: #333;
+        }
+
+        /* تخطيط الصفحة */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* 1. العدادات الإجمالية */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .stat-card {
+            border: 2px solid #700010;
+            border-radius: 12px;
+            padding: 20px 10px;
+            text-align: center;
+            background-color: #fff;
+        }
+
+        .stat-card.highlight {
+            background-color: #700010;
+            color: #fff;
+        }
+
+        .stat-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #700010;
+        }
+
+        .stat-card.highlight .stat-title {
+            color: #fff;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .stat-card.highlight .stat-value {
+            color: #fff;
+        }
+
+        /* 2. الأقسام الوسطى (طلبات الدم والتنبيهات) */
+        .middle-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .card-box {
+            border: 2px solid #700010;
+            border-radius: 18px;
+            padding: 20px;
+            background-color: #fff;
+            min-height: 220px;
+        }
+
+        .card-title {
+            color: #700010;
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .request-details {
+            text-align: center;
+            line-height: 1.8;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .request-status {
+            margin-top: 15px;
+            color: #700010;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .alerts-list {
+            list-style-type: disc;
+            padding-right: 25px;
+            font-size: 14px;
+            line-height: 2;
+            font-weight: 600;
+        }
+
+        /* 3. الكتلة السفلية: إجراءات سريعة */
+        .quick-actions-box {
+            border: 2px solid #700010;
+            border-radius: 30px;
+            padding: 15px 30px;
+            text-align: center;
+            background-color: #fff;
+        }
+
+        .quick-actions-title {
+            color: #700010;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .actions-buttons {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: #000;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 5px 15px;
+            transition: color 0.2s;
+        }
+
+        .action-btn:hover {
+            color: #700010;
+            text-decoration: underline;
+        }
+
+        /* 4. جدول فصائل الدم (اليمين) */
+        .sidebar-table-box {
+            border: 2px solid #700010;
+            border-radius: 18px;
+            padding: 15px;
+            background-color: #fff;
+        }
+
+        .blood-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        .blood-table th {
+            color: #700010;
+            font-size: 18px;
+            font-weight: bold;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #700010;
+        }
+
+        .blood-table td {
+            padding: 10px 5px;
+            font-size: 15px;
+            font-weight: 600;
+            border-bottom: 1.5px solid #700010;
+        }
+
+        .blood-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* التجاوب مع الشاشات الصغيرة */
+        @media (max-width: 900px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            .middle-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 class="page-title">لوحة التحكم</h1>
+        <div class="menu-icon">&#9776;</div>
+    </header>
+
+    <div class="dashboard-grid">
+        
+        <!-- القسم الأيمن في الترتيب العرضي (الجريد الأساسي) -->
+        <div class="left-panel">
+            
+            <!-- الجزء العلوي: عدادات مؤشرات الأداء الإجمالية -->
+            <div class="stats-row">
+                <div class="stat-card highlight">
+                    <div class="stat-title">مخزون الدم</div>
+                    <div class="stat-value" id="totalStock">وحدة 5000</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">المتبرعون</div>
+                    <div class="stat-value" id="totalDonors">20,0000</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">طلبات الدم</div>
+                    <div class="stat-value" id="totalRequests">70,0000</div>
+                </div>
+            </div>
+
+            <!-- الجزء الأوسط: آخر الطلبات والتنبيهات -->
+            <div class="middle-row">
+                
+                <!-- آخر طلبات الدم -->
+                <div class="card-box">
+                    <h2 class="card-title">اخر طلبات الدم</h2>
+                    <div class="request-details">
+                        <p>اسم المستشفى : ابراهيم مالك</p>
+                        <p>عدد الوحدات: 2000</p>
+                        <p>تاريخ الطالب : 23-8-2026</p>
+                        <div class="request-status">الحالة: قيد المعالجة</div>
+                    </div>
+                </div>
+
+                <!-- التنبيهات الفورية -->
+                <div class="card-box">
+                    <h2 class="card-title">التنبيهات</h2>
+                    <ul class="alerts-list" id="alertsContainer">
+                        <li>انخفاض مخزون O-</li>
+                        <li>طلب دم جديد من مستشفي</li>
+                        <li>تم قبول طلب دم</li>
+                        <li>وحدات دم اقتربت من تاريخ الانتهاء</li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- الكتلة السفلية: أزرار الإجراء السريع -->
+            <div class="quick-actions-box">
+                <div class="quick-actions-title">اجراءات سريعة</div>
+                <div class="actions-buttons">
+                    <button class="action-btn" onclick="handleQuickAction('اضافة مخزون')">إضافة مخزون</button>
+                    <button class="action-btn" onclick="handleQuickAction('اضافة متبرع')">إضافة متبرع</button>
+                    <button class="action-btn" onclick="handleQuickAction('طلب دم')">طلب دم</button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- جدول فصائل الدم والكميات والحالة -->
+        <div class="sidebar-table-box">
+            <table class="blood-table">
+                <thead>
+                    <tr>
+                        <th>الحالة</th>
+                        <th>الكمية</th>
+                        <th>الفصيلة</th>
+                    </tr>
+                </thead>
+                <tbody id="bloodTableBody">
+                    <tr>
+                        <td>متوفر</td>
+                        <td>120</td>
+                        <td>A+</td>
+                    </tr>
+                    <tr>
+                        <td>منخفض</td>
+                        <td>45</td>
+                        <td>A-</td>
+                    </tr>
+                    <tr>
+                        <td>متوفر</td>
+                        <td>90</td>
+                        <td>B+</td>
+                    </tr>
+                    <tr>
+                        <td>حرج</td>
+                        <td>20</td>
+                        <td>B-</td>
+                    </tr>
+                    <tr>
+                        <td>متوفر</td>
+                        <td>150</td>
+                        <td>O+</td>
+                    </tr>
+                    <tr>
+                        <td>حرج</td>
+                        <td>90</td>
+                        <td>O-</td>
+                    </tr>
+                    <tr>
+                        <td>متوفر</td>
+                        <td>60</td>
+                        <td>AB+</td>
+                    </tr>
+                    <tr>
+                        <td>منخفض</td>
+                        <td>30</td>
+                        <td>AB-</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <!-- JavaScript للتعامل مع السيناريو والإجراءات السريعة -->
+    <script>
+        function handleQuickAction(actionName) {
+            alert(`توجيه سريع إلى صفحة: ${actionName}`);
+        }
+
+        // دالة لإضافة تنبيه جديد ديناميكياً عند الحاجة
+        function addNotification(message) {
+            const container = document.getElementById('alertsContainer');
+            const newAlert = document.createElement('li');
+            newAlert.textContent = message;
+            container.prepend(newAlert);
+        }
+    </script>
+</body>
+</html>
