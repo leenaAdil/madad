@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Popup - Hospital Details</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #d1d5db;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* Container for layout preview */
+    .preview-container {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+
+    /* Page Label */
+    .page-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #4a1525;
+    }
+
+    /* Button to Open Popup */
+    .btn-open {
+      padding: 10px 20px;
+      background-color: #4a1525;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    /* Modal Background Overlay */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    /* Popup Box */
+    .popup-box {
+      width: 420px;
+      background-color: #e5e7eb;
+      border: 3px solid #4a1525;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      position: relative;
+    }
+
+    /* Hospital Icon Container */
+    .icon-header {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 25px;
+    }
+
+    .hospital-icon {
+      width: 50px;
+      height: 50px;
+      fill: #4a1525;
+    }
+
+    /* Popup Data Rows */
+    .info-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-size: 0.95rem;
+      color: #1f2937;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .info-item strong {
+      color: #1f2937;
+      font-weight: 700;
+    }
+
+    .info-item span {
+      color: #374151;
+    }
+
+    .info-item span.highlight-blue {
+      color: #2563eb;
+    }
+
+    /* Close Button */
+    .btn-close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: #4a1525;
+      cursor: pointer;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="preview-container">
+    <h1 class="page-title">View Popup</h1>
+    <button class="btn-open" onclick="togglePopup()">Open Popup</button>
+  </div>
+
+  <!-- Popup Window Component -->
+  <div class="modal-overlay" id="popupModal">
+    <div class="popup-box">
+      <button class="btn-close" onclick="togglePopup()">✕</button>
+      
+      <!-- Hospital Icon SVG -->
+      <div class="icon-header">
+        <svg class="hospital-icon" viewBox="0 0 24 24">
+          <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-3v3h-4v-3H7V9h3V6h4v3h3v4z"/>
+        </svg>
+      </div>
+
+      <!-- Popup Content List -->
+      <div class="info-list">
+        <div class="info-item">
+          <strong>Hospital Name:</strong>
+          <span>Royal Hospital</span>
+        </div>
+
+        <div class="info-item">
+          <strong>Location:</strong>
+          <span>Khartoum</span>
+        </div>
+
+        <div class="info-item">
+          <strong>Phone:</strong>
+          <span>0925625595</span>
+        </div>
+
+        <div class="info-item">
+          <strong>Email:</strong>
+          <span>royle@gamil.com</span>
+        </div>
+
+        <div class="info-item">
+          <strong>Status:</strong>
+          <span style="color: #6b7280;">Action</span>
+        </div>
+
+        <div class="info-item">
+          <strong>Connected Blood Bank:</strong>
+          <span class="highlight-blue">Khartoum central Blood</span>
+        </div>
+
+        <div class="info-item">
+          <strong>Current Blood Requests :</strong>
+          <span class="highlight-blue">2 Active Reqests</span>
+        </div>
+
+        <div class="info-item">
+          <strong>Previous Requests:</strong>
+          <span class="highlight-blue">15 completed Requests</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Dynamic Logic -->
+  <script>
+    function togglePopup() {
+      const modal = document.getElementById('popupModal');
+      modal.classList.toggle('hidden');
+    }
+  </script>
+
+</body>
+</html>
