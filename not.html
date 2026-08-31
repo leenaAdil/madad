@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MADAD - Navigation</title>
+    <style>
+        /* ================= Root Variables ================= */
+        :root {
+            --bg-main: #ffffff;
+            --primary-color: #730b19;
+            --primary-light: #fdf2f4;
+            --text-dark: #222222;
+            --text-muted: #666666;
+            --border-color: #eaeaea;
+            --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.03);
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            font-family: var(--font-family);
+            color: var(--text-dark);
+        }
+
+        /* Checkbox Hack Toggle (Hidden) */
+        #menu-toggle-input {
+            display: none;
+        }
+
+        /* ================= Desktop Navigation ================= */
+        .desktop-navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+            padding: 0 2rem;
+            background-color: var(--bg-main);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: var(--shadow-light);
+        }
+
+        .brand-name {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            letter-spacing: 1px;
+        }
+
+        .nav-center {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-link, .dropdown-btn {
+            background: none;
+            border: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .nav-link:hover, .dropdown-btn:hover {
+            color: var(--primary-color);
+            background-color: var(--primary-light);
+        }
+
+        .nav-link.active {
+            color: var(--primary-color);
+            background-color: var(--primary-light);
+            font-weight: 600;
+        }
+
+        /* Dropdown CSS Only */
+        .dropdown, .user-dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            min-width: 180px;
+            background-color: var(--bg-main);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+            padding: 0.5rem 0;
+            z-index: 1000;
+            margin-top: 0.5rem;
+        }
+
+        .dropdown-content.right {
+            left: auto;
+            right: 0;
+        }
+
+        .dropdown:hover .dropdown-content,
+        .user-dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-content a {
+            display: block;
+            padding: 0.6rem 1.2rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background 0.2s ease;
+        }
+
+        .dropdown-content a:hover {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+        }
+
+        .dropdown-content hr {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: 0.4rem 0;
+        }
+
+        /* Navigation Right */
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.4rem;
+            border-radius: 50%;
+            transition: background 0.2s ease;
+        }
+
+        .icon-btn:hover {
+            background-color: var(--primary-light);
+        }
+
+        .user-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.3rem 0.6rem;
+            border-radius: var(--radius-sm);
+        }
+
+        .user-btn:hover {
+            background-color: var(--primary-light);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .user-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .arrow {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* ================= Mobile Header & Sidebar (Pure CSS) ================= */
+        .mobile-header {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+            padding: 0 1.2rem;
+            background-color: var(--bg-main);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .menu-toggle-label {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-dark);
+            user-select: none;
+        }
+
+        .mobile-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Overlay & Sidebar CSS State */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1050;
+        }
+
+        .mobile-sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background-color: var(--bg-main);
+            z-index: 1100;
+            transition: left 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem 1.2rem;
+            box-shadow: 4px 0 12px rgba(0,0,0,0.1);
+        }
+
+        /* Toggle Sidebar on Checkbox Checked */
+        #menu-toggle-input:checked ~ .mobile-sidebar {
+            left: 0;
+        }
+
+        #menu-toggle-input:checked ~ .sidebar-overlay {
+            display: block;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .close-btn-label {
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            user-select: none;
+        }
+
+        .sidebar-user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-divider {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: 0.8rem 0;
+        }
+
+        .sidebar-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            flex: 1;
+        }
+
+        .sidebar-link {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+            font-weight: 500;
+            padding: 0.6rem 0.8rem;
+            border-radius: var(--radius-sm);
+            transition: background 0.2s ease;
+        }
+
+        .sidebar-link.active, .sidebar-link:hover {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+        }
+
+        .sidebar-dropdown-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            padding: 0.6rem 0.8rem;
+            color: var(--text-dark);
+        }
+
+        .sidebar-sublinks {
+            display: flex;
+            flex-direction: column;
+            padding-left: 1.2rem;
+            gap: 0.2rem;
+        }
+
+        .sidebar-sublinks a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: var(--radius-sm);
+        }
+
+        .sidebar-sublinks a:hover {
+            color: var(--primary-color);
+            background-color: var(--primary-light);
+        }
+
+        .logout-link {
+            color: var(--primary-color);
+        }
+
+        /* Responsive Media Query */
+        @media (max-width: 768px) {
+            .desktop-navbar {
+                display: none;
+            }
+
+            .mobile-header {
+                display: flex;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hidden Checkbox for CSS-Only Toggle -->
+    <input type="checkbox" id="menu-toggle-input">
+
+    <!-- ================= Desktop Navbar ================= -->
+    <header class="desktop-navbar">
+        <div class="nav-left">
+            <span class="brand-name">MADAD</span>
+        </div>
+
+        <nav class="nav-center">
+            <a href="#" class="nav-link active">Home</a>
+            
+            <div class="dropdown">
+                <button class="dropdown-btn">
+                    Blood Management 
+                    <span class="arrow">▾</span>
+                </button>
+                <div class="dropdown-content">
+                    <a href="#">Blood Banks</a>
+                    <a href="#">Inventory</a>
+                    <a href="#">Blood Requests</a>
+                </div>
+            </div>
+
+            <a href="#" class="nav-link">Reports</a>
+        </nav>
+
+        <div class="nav-right">
+            <button class="icon-btn" aria-label="Notifications">🔔</button>
+            
+            <div class="user-dropdown">
+                <button class="user-btn">
+                    <div class="user-info">
+                        <span class="user-name">Sara Ahmed</span>
+                        <span class="user-role">Admin</span>
+                    </div>
+                    <span class="arrow">▾</span>
+                </button>
+                <div class="dropdown-content right">
+                    <a href="#">Profile</a>
+                    <a href="#">Notifications</a>
+                    <a href="#">Settings</a>
+                    <hr>
+                    <a href="#" class="logout-link">Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ================= Mobile Header ================= -->
+    <header class="mobile-header">
+        <label for="menu-toggle-input" class="menu-toggle-label">☰</label>
+        <span class="brand-name">MADAD</span>
+        <div class="mobile-actions">
+            <button class="icon-btn">🔔</button>
+            <button class="icon-btn">👤</button>
+        </div>
+    </header>
+
+    <!-- ================= Mobile Overlay & Sidebar (Pure CSS) ================= -->
+    <label for="menu-toggle-input" class="sidebar-overlay"></label>
+
+    <aside class="mobile-sidebar">
+        <div class="sidebar-header">
+            <span class="brand-name">MADAD</span>
+            <label for="menu-toggle-input" class="close-btn-label">✕</label>
+        </div>
+
+        <div class="sidebar-user-info">
+            <span class="user-name">Sara Ahmed</span>
+            <span class="user-role">Admin</span>
+        </div>
+
+        <hr class="sidebar-divider">
+
+        <nav class="sidebar-links">
+            <a href="#" class="sidebar-link active">Home</a>
+            
+            <div class="sidebar-dropdown">
+                <div class="sidebar-dropdown-title">Blood Management</div>
+                <div class="sidebar-sublinks">
+                    <a href="#">Blood Banks</a>
+                    <a href="#">Inventory</a>
+                    <a href="#">Blood Requests</a>
+                </div>
+            </div>
+
+            <a href="#" class="sidebar-link">Reports</a>
+            <a href="#" class="sidebar-link">Notifications</a>
+            <a href="#" class="sidebar-link">Profile</a>
+        </nav>
+
+        <hr class="sidebar-divider">
+
+        <div class="sidebar-footer">
+            <a href="#" class="sidebar-link logout-link">Logout</a>
+        </div>
+    </aside>
+
+</body>
+</html>
