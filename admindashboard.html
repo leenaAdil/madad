@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BLOODLINK - Admin Dashboard</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f3f4f6;
+      color: #1f2937;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    aside {
+      width: 240px;
+      background-color: #ffffff;
+      border-right: 1px solid #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20px;
+    }
+
+    .brand-logo {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #111827;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 30px;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-logo svg {
+      width: 24px;
+      height: 24px;
+      fill: #dc2626;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .nav-item a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      text-decoration: none;
+      color: #4b5563;
+      font-weight: 500;
+      font-size: 0.95rem;
+      border-radius: 8px;
+    }
+
+    .nav-item.active a, .nav-item a:hover {
+      background-color: #eff6ff;
+      color: #2563eb;
+    }
+
+    /* Main Area */
+    main {
+      flex: 1;
+      padding: 24px 32px;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    /* Navbar Top */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.9rem;
+      color: #4b5563;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: #d1d5db;
+    }
+
+    .nav-icon {
+      position: relative;
+      cursor: pointer;
+      font-size: 1.1rem;
+    }
+
+    .badge-count {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background-color: #ef4444;
+      color: white;
+      font-size: 0.65rem;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Section Title */
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #111827;
+    }
+
+    /* Stats Cards Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .card {
+      background: #ffffff;
+      padding: 16px 20px;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .stat-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .stat-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .stat-title {
+      font-size: 0.85rem;
+      color: #6b7280;
+      font-weight: 500;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .stat-change {
+      font-size: 0.75rem;
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    .stat-change.positive { color: #16a34a; }
+    .stat-change.neutral { color: #6b7280; }
+
+    .card-small {
+      width: 250px;
+      margin-bottom: 24px;
+    }
+
+    /* Charts Section */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .chart-card {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .chart-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #111827;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chart-subtitle {
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-bottom: 15px;
+    }
+
+    .chart-box {
+      height: 200px;
+      position: relative;
+    }
+
+    canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    /* Legend Donut */
+    .donut-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .donut-legend {
+      list-style: none;
+      font-size: 0.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .legend-color {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 6px;
+    }
+
+    /* Table Section */
+    .table-card {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      text-align: left;
+    }
+
+    th {
+      color: #6b7280;
+      font-weight: 600;
+      font-size: 0.8rem;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    td {
+      padding: 12px 0;
+      border-bottom: 1px solid #f9fafb;
+      font-size: 0.85rem;
+      color: #374151;
+    }
+
+    .status-badge {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    .status-pending { background-color: #fef3c7; color: #d97706; }
+    .status-approved { background-color: #dcfce7; color: #15803d; }
+    .status-fulfilled { background-color: #e0e7ff; color: #4338ca; }
+    .status-processing { background-color: #e0f2fe; color: #0369a1; }
+
+    /* Notifications Popup Widget */
+    .notifications-popup {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 320px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e5e7eb;
+      overflow: hidden;
+    }
+
+    .popup-header {
+      padding: 10px 14px;
+      background: #f9fafb;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .popup-body {
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .notif-item {
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .notif-critical { background-color: #fef2f2; color: #991b1b; }
+    .notif-info { background-color: #f0fdf4; color: #166534; }
+    .notif-warning { background-color: #ecfdf5; color: #047857; }
+
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside>
+    <div>
+      <div class="brand-logo">
+        <svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+        BLOODLINK
+      </div>
+      
+      <ul class="nav-list">
+        <li class="nav-item active"><a href="#"><span>🏠</span> Home</a></li>
+        <li class="nav-item"><a href="#"><span>👤</span> Donors</a></li>
+        <li class="nav-item"><a href="#"><span>🏥</span> Hospitals</a></li>
+        <li class="nav-item"><a href="#"><span>🩸</span> Blood Stock</a></li>
+        <li class="nav-item"><a href="#"><span>📋</span> Requests</a></li>
+        <li class="nav-item"><a href="#"><span>👥</span> Users</a></li>
+        <li class="nav-item"><a href="#"><span>⚙️</span> Settings</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main>
+    
+    <!-- Top Header -->
+    <header>
+      <h1>Dashboard</h1>
+      <div class="user-profile">
+        <span>Admin | Welcome back, Admin 👋</span>
+        <div class="nav-icon">🔔<span class="badge-count">3</span></div>
+        <div class="avatar"></div>
+      </div>
+    </header>
+
+    <h2 class="section-title">Overview</h2>
+
+    <!-- Statistics Cards Grid -->
+    <section class="stats-grid">
+      <div class="card">
+        <div class="stat-header">
+          <div class="stat-icon" style="background:#eff6ff; color:#2563eb;">👤</div>
+          <div>
+            <div class="stat-title">Total Donors</div>
+            <div class="stat-value">1,250</div>
+          </div>
+        </div>
+        <div class="stat-change positive">+5% this month</div>
+      </div>
+
+      <div class="card">
+        <div class="stat-header">
+          <div class="stat-icon" style="background:#ecfdf5; color:#059669;">🏥</div>
+          <div>
+            <div class="stat-title">Total Hospitals</div>
+            <div class="stat-value">45</div>
+          </div>
+        </div>
+        <div class="stat-change positive">+2 new</div>
+      </div>
+
+      <div class="card">
+        <div class="stat-header">
+          <div class="stat-icon" style="background:#f3f4f6; color:#4b5563;">🏛️</div>
+          <div>
+            <div class="stat-title">Blood Banks</div>
+            <div class="stat-value">12</div>
+          </div>
+        </div>
+        <div class="stat-change neutral">Stable</div>
+      </div>
+
+      <div class="card">
+        <div class="stat-header">
+          <div class="stat-icon" style="background:#fef3c7; color:#d97706;">📋</div>
+          <div>
+            <div class="stat-title">Blood Requests</div>
+            <div class="stat-value">320</div>
+          </div>
+        </div>
+        <div class="stat-change positive">+18% today</div>
+      </div>
+    </section>
+
+    <!-- Sub Card -->
+    <div class="card card-small">
+      <div class="stat-header">
+        <div class="stat-icon" style="background:#fef2f2; color:#dc2626;">🩸</div>
+        <div>
+          <div class="stat-title">Total Blood Units</div>
+          <div class="stat-value">25,430</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Grid -->
+    <section class="charts-grid">
+      
+      <!-- Chart 1: Bar Chart -->
+      <div class="chart-card">
+        <div class="chart-title">📊 Chart 1 — Blood Stock</div>
+        <div class="chart-subtitle">Blood Stock by Type</div>
+        <div class="chart-box">
+          <canvas id="barChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Chart 2: Donut Chart -->
+      <div class="chart-card">
+        <div class="chart-title">📈 Chart 2 — Request Status</div>
+        <div class="chart-subtitle">Blood Requests Status</div>
+        <div class="chart-box donut-container">
+          <div style="width: 140px; height: 140px;">
+            <canvas id="donutChart"></canvas>
+          </div>
+          <ul class="donut-legend">
+            <li class="legend-item"><div><span class="legend-color" style="background:#f59e0b;"></span>Pending</div><strong>25%</strong></li>
+            <li class="legend-item"><div><span class="legend-color" style="background:#10b981;"></span>Approved</div><strong>40%</strong></li>
+            <li class="legend-item"><div><span class="legend-color" style="background:#3b82f6;"></span>Processing</div><strong>15%</strong></li>
+            <li class="legend-item"><div><span class="legend-color" style="background:#06b6d4;"></span>Fulfilled</div><strong>15%</strong></li>
+            <li class="legend-item"><div><span class="legend-color" style="background:#ef4444;"></span>Rejected</div><strong>5%</strong></li>
+          </ul>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Recent Requests Table -->
+    <section class="table-card">
+      <div class="chart-title" style="margin-bottom: 12px;">📋 Recent Requests</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Hospital</th>
+            <th>Blood Type</th>
+            <th>Units</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Royal Hospital</td>
+            <td>O-</td>
+            <td>5</td>
+            <td><span class="status-badge status-pending">Pending</span></td>
+          </tr>
+          <tr>
+            <td>Al Noor Hospital</td>
+            <td>A+</td>
+            <td>3</td>
+            <td><span class="status-badge status-approved">Approved</span></td>
+          </tr>
+          <tr>
+            <td>Central Hospital</td>
+            <td>O+</td>
+            <td>10</td>
+            <td><span class="status-badge status-fulfilled">Fulfilled</span></td>
+          </tr>
+          <tr>
+            <td>City Clinic</td>
+            <td>B+</td>
+            <td>2</td>
+            <td><span class="status-badge status-processing">Processing</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Notifications Popup Widget -->
+    <div class="notifications-popup">
+      <div class="popup-header">
+        <span>Notifications</span>
+        <span style="cursor:pointer; color:#9ca3af;">— ✕</span>
+      </div>
+      <div class="popup-body">
+        <div class="notif-item notif-critical">
+          <span>⚠️</span>
+          <div>O- stock is critical in Main Bank</div>
+        </div>
+        <div class="notif-item notif-info">
+          <span>📩</span>
+          <div>New blood request received (O+, Royal Hospital)</div>
+        </div>
+        <div class="notif-item notif-warning">
+          <span>📅</span>
+          <div>Donation appointment scheduled</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Pure JS Canvas Charts Implementation -->
+  <script>
+    // --- Bar Chart Rendering ---
+    const barCanvas = document.getElementById('barChart');
+    const ctxBar = barCanvas.getContext('2d');
+    barCanvas.width = barCanvas.parentElement.clientWidth;
+    barCanvas.height = barCanvas.parentElement.clientHeight;
+
+    const barData = [
+      { label: 'A+', val: 100, color: '#3b82f6', text: '100%\nHigh' },
+      { label: 'A-', val: 45, color: '#93c5fd', text: '45%\n3 units' },
+      { label: 'B+', val: 28, color: '#86efac', text: '28%\nMedium' },
+      { label: 'B-', val: 32, color: '#86efac', text: '32%\n3 units' },
+      { label: 'O+', val: 75, color: '#ef4444', text: 'O+\nCritical\nHigh' },
+      { label: 'O-', val: 20, color: '#fde047', text: 'O-\nCritical\nLow' },
+      { label: 'AB+', val: 25, color: '#c084fc', text: '10%\n3 units' },
+      { label: 'AB-', val: 22, color: '#f97316', text: '16%\n3 units' }
+    ];
+
+    const chartHeight = barCanvas.height - 40;
+    const barWidth = 32;
+    const gap = (barCanvas.width - (barData.length * barWidth)) / (barData.length + 1);
+
+    barData.forEach((item, index) => {
+      const x = gap + index * (barWidth + gap);
+      const barH = (item.val / 100) * (chartHeight - 30);
+      const y = chartHeight - barH;
+
+      // Draw Bar
+      ctxBar.fillStyle = item.color;
+      ctxBar.fillRect(x, y, barWidth, barH);
+
+      // Draw Top Text
+      ctxBar.fillStyle = '#374151';
+      ctxBar.font = '10px Tahoma';
+      ctxBar.textAlign = 'center';
+      const lines = item.text.split('\n');
+      lines.forEach((line, lIndex) => {
+        ctxBar.fillText(line, x + barWidth / 2, y - (lines.length - lIndex) * 11);
+      });
+
+      // Draw Label Bottom
+      ctxBar.fillStyle = '#111827';
+      ctxBar.font = 'bold 12px Tahoma';
+      ctxBar.fillText(item.label, x + barWidth / 2, barCanvas.height - 8);
+    });
+
+    // --- Donut Chart Rendering ---
+    const donutCanvas = document.getElementById('donutChart');
+    const ctxDonut = donutCanvas.getContext('2d');
+    donutCanvas.width = donutCanvas.parentElement.clientWidth;
+    donutCanvas.height = donutCanvas.parentElement.clientHeight;
+
+    const donutSegments = [
+      { val: 25, color: '#f59e0b' },
+      { val: 40, color: '#10b981' },
+      { val: 15, color: '#3b82f6' },
+      { val: 15, color: '#06b6d4' },
+      { val: 5,  color: '#ef4444' }
+    ];
+
+    const centerX = donutCanvas.width / 2;
+    const centerY = donutCanvas.height / 2;
+    const outerRadius = Math.min(centerX, centerY);
+    const innerRadius = outerRadius * 0.55;
+
+    let startAngle = -Math.PI / 2;
+    donutSegments.forEach(slice => {
+      const sliceAngle = (slice.val / 100) * 2 * Math.PI;
+
+      ctxDonut.beginPath();
+      ctxDonut.arc(centerX, centerY, outerRadius, startAngle, startAngle + sliceAngle);
+      ctxDonut.arc(centerX, centerY, innerRadius, startAngle + sliceAngle, startAngle, true);
+      ctxDonut.closePath();
+      ctxDonut.fillStyle = slice.color;
+      ctxDonut.fill();
+
+      startAngle += sliceAngle;
+    });
+  </script>
+
+</body>
+</html>
