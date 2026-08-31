@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Central Blood Bank</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f4f6f9;
+      color: #333;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    aside {
+      width: 250px;
+      background-color: #ffffff;
+      border-left: 1px solid #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: bold;
+      color: #dc2626;
+      margin-bottom: 30px;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .nav-item a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 15px;
+      text-decoration: none;
+      color: #4b5563;
+      font-weight: 600;
+      border-radius: 8px;
+    }
+
+    .nav-item.active a, .nav-item a:hover {
+      background-color: #fef2f2;
+      color: #dc2626;
+    }
+
+    /* Main Content */
+    main {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      background-color: #e5e7eb;
+      padding: 8px 15px;
+      border-radius: 20px;
+    }
+
+    .search-bar input {
+      border: none;
+      background: transparent;
+      outline: none;
+      padding-right: 8px;
+    }
+
+    /* Stat Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      border: 1px solid #edf2f7;
+    }
+
+    .card p {
+      font-size: 0.85rem;
+      color: #6b7280;
+      margin-bottom: 5px;
+    }
+
+    .card h3 {
+      font-size: 1.5rem;
+      color: #111827;
+    }
+
+    /* Grid Sections */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      text-align: right;
+    }
+
+    th {
+      color: #9ca3af;
+      font-weight: 600;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    td {
+      padding: 10px 0;
+      border-bottom: 1px solid #f9fafb;
+      font-size: 0.9rem;
+    }
+
+    /* Status Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .badge::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .badge.available { color: #059669; }
+    .badge.available::before { background-color: #10b981; }
+
+    .badge.low { color: #d97706; }
+    .badge.low::before { background-color: #f59e0b; }
+
+    .badge.critical { color: #dc2626; }
+    .badge.critical::before { background-color: #ef4444; }
+
+    .badge.pending { color: #d97706; }
+    .badge.pending::before { background-color: #f59e0b; }
+
+    .badge.approved { color: #059669; }
+    .badge.approved::before { background-color: #10b981; }
+
+    /* Custom CSS Canvas Chart Container */
+    .chart-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      height: 220px;
+      margin-top: 20px;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Lower Section */
+    .lower-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+    }
+
+    .expiring-card {
+      background-color: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .expiring-box {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid #fee2e2;
+    }
+  </style>
+</head>
+<body>
+
+  <aside>
+    <div>
+      <div class="logo">
+        <span>🩸 Admin Dashboard</span>
+      </div>
+      <ul class="nav-list">
+        <li class="nav-item"><a href="#">📊 Dashboard</a></li>
+        <li class="nav-item active"><a href="#">🩸 Blood Stock</a></li>
+        <li class="nav-item"><a href="#">📋 Requests</a></li>
+        <li class="nav-item"><a href="#">🏥 Hospitals</a></li>
+        <li class="nav-item"><a href="#">⏳ Expiring</a></li>
+      </ul>
+    </div>
+    <div class="nav-item"><a href="#">⚙️ Settings</a></div>
+  </aside>
+
+  <main>
+    
+    <header>
+      <h2>Welcome back, Central Blood Bank 👋</h2>
+      <div class="search-bar">
+        🔍 <input type="text" placeholder="Search">
+      </div>
+    </header>
+
+    <section class="stats-grid">
+      <div class="card">
+        <p>Total Blood Units</p>
+        <h3>25,430</h3>
+      </div>
+      <div class="card">
+        <p>Available Units</p>
+        <h3>20,120</h3>
+      </div>
+      <div class="card">
+        <p>Low Stock</p>
+        <h3>3</h3>
+      </div>
+      <div class="card">
+        <p>Critical Stock</p>
+        <h3>1</h3>
+      </div>
+    </section>
+
+    <section class="dashboard-grid">
+      
+      <div class="card">
+        <h3>🩸 Blood Stock Overview</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Units</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>A+</td><td>320</td><td><span class="badge available">Available</span></td></tr>
+            <tr><td>A-</td><td>90</td><td><span class="badge available">Available</span></td></tr>
+            <tr><td>B+</td><td>250</td><td><span class="badge available">Available</span></td></tr>
+            <tr><td>B-</td><td>40</td><td><span class="badge low">Low</span></td></tr>
+            <tr><td>O+</td><td>500</td><td><span class="badge available">Available</span></td></tr>
+            <tr><td>O-</td><td>15</td><td><span class="badge critical">Critical</span></td></tr>
+            <tr><td>AB+</td><td>100</td><td><span class="badge available">Available</span></td></tr>
+            <tr><td>AB-</td><td>30</td><td><span class="badge low">Low</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h3>📊 Chart — Blood Inventory by Type</h3>
+        <div class="chart-container">
+          <canvas id="customChart"></canvas>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="lower-grid">
+      
+      <div class="card">
+        <h3>📋 Recent Blood Requests</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Hospital</th>
+              <th>Type</th>
+              <th>Units</th>
+              <th>Priority</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Royal Hospital</td>
+              <td>O-</td>
+              <td>5</td>
+              <td>High</td>
+              <td><span class="badge pending">Pending</span></td>
+            </tr>
+            <tr>
+              <td>Al Noor</td>
+              <td>A+</td>
+              <td>3</td>
+              <td>Normal</td>
+              <td><span class="badge approved">Approved</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="expiring-card">
+        <h3 style="color: #dc2626;">⚠️ Expiring Soon</h3>
+        <div class="expiring-box">
+          <div>
+            <strong>O+ — 20 Units</strong>
+            <p style="font-size: 0.8rem; color: #6b7280; margin-top: 4px;">Expiry: 05 Sep</p>
+          </div>
+          <span>📅</span>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script>
+    const canvas = document.getElementById('customChart');
+    const ctx = canvas.getContext('2d');
+
+    // Adjust Canvas Scale
+    canvas.width = canvas.parentElement.clientWidth;
+    canvas.height = canvas.parentElement.clientHeight;
+
+    const data = [
+      { label: 'A+', val: 320, color: '#10b981' },
+      { label: 'A-', val: 90, color: '#f59e0b' },
+      { label: 'B+', val: 250, color: '#10b981' },
+      { label: 'B-', val: 40, color: '#f59e0b' },
+      { label: 'O+', val: 500, color: '#10b981' },
+      { label: 'O-', val: 15, color: '#ef4444' },
+      { label: 'AB+', val: 100, color: '#dc2626' },
+      { label: 'AB-', val: 30, color: '#f59e0b' }
+    ];
+
+    const maxVal = 500;
+    const padding = 30;
+    const chartHeight = canvas.height - padding;
+    const barWidth = (canvas.width / data.length) - 15;
+
+    // Draw Chart
+    data.forEach((item, index) => {
+      const x = index * (barWidth + 15) + 10;
+      const barH = (item.val / maxVal) * (chartHeight - 20);
+      const y = chartHeight - barH;
+
+      // Draw Bar
+      ctx.fillStyle = item.color;
+      ctx.fillRect(x, y, barWidth, barH);
+
+      // Draw Label
+      ctx.fillStyle = '#6b7280';
+      ctx.font = '12px Tahoma';
+      ctx.textAlign = 'center';
+      ctx.fillText(item.label, x + barWidth / 2, canvas.height - 5);
+    });
+  </script>
+
+</body>
+</html>
