@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Popup - Donor Details</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #d1d5db;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* Outer Container */
+    .preview-container {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+
+    .page-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #4a1525;
+    }
+
+    .btn-open {
+      padding: 10px 20px;
+      background-color: #4a1525;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    /* Modal Background Overlay */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    /* Popup Main Box */
+    .popup-box {
+      width: 420px;
+      background-color: #e5e7eb;
+      border: 3px solid #4a1525;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      position: relative;
+    }
+
+    /* Close Icon Button */
+    .btn-close {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      color: #4a1525;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    /* User Avatar Header */
+    .icon-header {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 25px;
+    }
+
+    .user-icon {
+      width: 60px;
+      height: 60px;
+      fill: #4a1525;
+    }
+
+    /* Data List Layout */
+    .info-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-size: 0.95rem;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .info-item strong {
+      color: #1f2937;
+      font-weight: 700;
+    }
+
+    .info-item span {
+      color: #374151;
+    }
+
+    .info-item span.highlight-blue {
+      color: #2563eb;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="preview-container">
+    <h1 class="page-title">View Popup</h1>
+    <button class="btn-open" onclick="togglePopup()">Open Popup</button>
+  </div>
+
+  <!-- Donor Popup Component -->
+  <div class="modal-overlay" id="popupModal">
+    <div class="popup-box">
+      <button class="btn-close" onclick="togglePopup()">✕</button>
+      
+      <!-- User Profile SVG Icon -->
+      <div class="icon-header">
+        <svg class="user-icon" viewBox="0 0 24 24">
+          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+        </svg>
+      </div>
+
+      <!-- Information List -->
+      <div class="info-list">
+        <div class="info-item">
+          <strong>Donors Name:</strong>
+          <span>Ahmed Ali</span>
+        </div>
+
+        <div class="info-item">
+          <strong>Location:</strong>
+          <span>Khartoum</span>
+        </div>
+
+        <div class="info-item">
+          <strong>Phone:</strong>
+          <span>0925625595</span>
+        </div>
+
+        <div class="info-item">
+          <strong>Email:</strong>
+          <span class="highlight-blue">ahmed @gamil.com</span>
+        </div>
+
+        <div class="info-item">
+          <strong>Status:</strong>
+          <span style="color: #6b7280;">Action</span>
+        </div>
+
+        <div class="info-item">
+          <strong>Last donation:</strong>
+          <span>20 sep</span>
+        </div>
+
+        <div class="info-item">
+          <strong>Donation status:</strong>
+          <span>Available</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Toggle Logic -->
+  <script>
+    function togglePopup() {
+      const modal = document.getElementById('popupModal');
+      modal.classList.toggle('hidden');
+    }
+  </script>
+
+</body>
+</html>
