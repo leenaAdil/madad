@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hospital Dashboard - Royal Hospital</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f4f6f9;
+      color: #333;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    aside {
+      width: 240px;
+      background-color: #ffffff;
+      border-left: 1px solid #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: bold;
+      color: #dc2626;
+      margin-bottom: 30px;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .nav-item a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 15px;
+      text-decoration: none;
+      color: #4b5563;
+      font-weight: 600;
+      border-radius: 8px;
+    }
+
+    .nav-item.active a, .nav-item a:hover {
+      background-color: #fef2f2;
+      color: #dc2626;
+    }
+
+    /* Main Content */
+    main {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+    }
+
+    /* Top Bar */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      background-color: #e5e7eb;
+      padding: 8px 15px;
+      border-radius: 20px;
+    }
+
+    .search-bar input {
+      border: none;
+      background: transparent;
+      outline: none;
+      padding-right: 8px;
+    }
+
+    /* Stat Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      border: 1px solid #edf2f7;
+    }
+
+    .card p {
+      font-size: 0.85rem;
+      color: #6b7280;
+      margin-bottom: 5px;
+    }
+
+    .card h3 {
+      font-size: 1.5rem;
+      color: #111827;
+    }
+
+    /* Blood Availability Section */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .search-box-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .filter-input-group {
+      display: flex;
+      align-items: center;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .filter-input-group input {
+      border: none;
+      padding: 8px 12px;
+      outline: none;
+      width: 120px;
+      text-align: center;
+    }
+
+    .filter-input-group button {
+      background-color: #dc2626;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+
+    .btn-create {
+      background-color: #3b5998;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-create:hover {
+      background-color: #2d4373;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      text-align: right;
+    }
+
+    th {
+      color: #9ca3af;
+      font-weight: 600;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    td {
+      padding: 12px 0;
+      border-bottom: 1px solid #f9fafb;
+      font-size: 0.9rem;
+    }
+
+    /* Status Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .badge::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .badge.available { color: #059669; }
+    .badge.available::before { background-color: #10b981; }
+
+    .badge.critical { color: #dc2626; }
+    .badge.critical::before { background-color: #ef4444; }
+
+    .badge.pending { color: #d97706; }
+    .badge.pending::before { background-color: #f59e0b; }
+
+    .badge.approved { color: #059669; }
+    .badge.approved::before { background-color: #10b981; }
+
+    .badge.fulfilled { color: #2563eb; }
+    .badge.fulfilled::before { background-color: #3b82f6; }
+
+    /* Lower Grid */
+    .lower-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+      margin-top: 25px;
+    }
+
+    .expiring-card {
+      background-color: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .expiring-box {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid #fee2e2;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside>
+    <div>
+      <div class="logo">
+        <span>👑 Admin Dashboard</span>
+      </div>
+      <ul class="nav-list">
+        <li class="nav-item active"><a href="#">🏠 Dashboard</a></li>
+        <li class="nav-item"><a href="#">📋 My Requests</a></li>
+        <li class="nav-item"><a href="#">🏥 Requests (Public)</a></li>
+        <li class="nav-item"><a href="#">⏳ Expiring</a></li>
+      </ul>
+    </div>
+    <div class="nav-item"><a href="#">⚙️ Settings</a></div>
+  </aside>
+
+  <!-- Main Content -->
+  <main>
+    
+    <!-- Top Header -->
+    <header>
+      <h2>Welcome back, Royal Hospital 👋</h2>
+      <div class="search-bar">
+        🔍 <input type="text" placeholder="Search">
+      </div>
+    </header>
+
+    <!-- Statistics -->
+    <section class="stats-grid">
+      <div class="card">
+        <p>Available Blood Units</p>
+        <h3>20,120</h3>
+      </div>
+      <div class="card">
+        <p>My Requests</p>
+        <h3>25</h3>
+      </div>
+      <div class="card">
+        <p>Pending Requests</p>
+        <h3>4</h3>
+      </div>
+      <div class="card">
+        <p>Fulfilled Requests</p>
+        <h3>18</h3>
+      </div>
+    </section>
+
+    <!-- Blood Availability Section -->
+    <section class="card">
+      <div class="section-header">
+        <h3>🩸 Blood Availability</h3>
+        <button class="btn-create" onclick="createRequest()">+ Create Blood Request</button>
+      </div>
+
+      <div class="search-box-container" style="margin-bottom: 15px;">
+        <label style="font-size: 0.9rem; font-weight: 600;">Search Blood Type:</label>
+        <div class="filter-input-group">
+          <input type="text" id="bloodSearchInput" value="O-">
+          <button onclick="filterBloodType()">🔍</button>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Blood Bank</th>
+            <th>Blood Type</th>
+            <th>Available</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="availabilityTable">
+          <tr>
+            <td>Central Bank</td>
+            <td>O-</td>
+            <td>15</td>
+            <td><span class="badge critical">Critical</span></td>
+          </tr>
+          <tr>
+            <td>Emergency Bank</td>
+            <td>O-</td>
+            <td>25</td>
+            <td><span class="badge available">Available</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Lower Section -->
+    <section class="lower-grid">
+      
+      <!-- My Recent Requests Table -->
+      <div class="card">
+        <h3>📋 My Recent Requests</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Blood Type</th>
+              <th>Units</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>#001</td>
+              <td>O-</td>
+              <td>5</td>
+              <td><span class="badge pending">Pending</span></td>
+            </tr>
+            <tr>
+              <td>#002</td>
+              <td>A+</td>
+              <td>3</td>
+              <td><span class="badge approved">Approved</span></td>
+            </tr>
+            <tr>
+              <td>#003</td>
+              <td>B+</td>
+              <td>2</td>
+              <td><span class="badge fulfilled">Fulfilled</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Expiring Soon Alert -->
+      <div class="expiring-card">
+        <h3 style="color: #dc2626;">⚠️ Expiring Soon</h3>
+        <p style="color: #dc2626; font-size: 0.85rem; margin-top: 5px; font-weight: bold;">O+ Critical: 4</p>
+        <div class="expiring-box">
+          <div>
+            <strong>O+ — 20 Units</strong>
+            <p style="font-size: 0.8rem; color: #6b7280; margin-top: 4px;">Expiry: 05</p>
+          </div>
+          <span>📅</span>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- JavaScript Dynamic Functionality -->
+  <script>
+    // تصفية نتائج البحث حسب الفصيلة
+    function filterBloodType() {
+      const input = document.getElementById('bloodSearchInput').value.toUpperCase().trim();
+      const table = document.getElementById('availabilityTable');
+      const rows = table.getElementsByTagName('tr');
+
+      for (let i = 0; i < rows.length; i++) {
+        const typeCell = rows[i].getElementsByTagName('td')[1];
+        if (typeCell) {
+          const txtValue = typeCell.textContent || typeCell.innerText;
+          if (txtValue.toUpperCase().indexOf(input) > -1 || input === '') {
+            rows[i].style.display = '';
+          } else {
+            rows[i].style.display = 'none';
+          }
+        }
+      }
+    }
+
+    // زر إضافة طلب دم جديد
+    function createRequest() {
+      const bloodType = prompt("أدخل فصيلة الدم المطلوبة (مثال: O-, A+):");
+      if (bloodType) {
+        const units = prompt("أدخل عدد الوحدات المطلوبة:");
+        if (units) {
+          alert(`تم إنشاء طلب جديد بنجاح!\nفصيلة الدم: ${bloodType}\nعدد الوحدات: ${units}`);
+        }
+      }
+    }
+  </script>
+
+</body>
+</html>
